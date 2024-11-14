@@ -17,12 +17,11 @@ const citaObj = {
 
 //! Eventos
 pacienteInput.addEventListener('change', (e) => {
-    citaObj.paciente = e.target.value;
+    citaObj[e.target.name] = e.target.value;
     console.log(citaObj);
 });
-
 propietarioInput.addEventListener('change', (e) => {
-    citaObj.propietario = e.target.value;
+    citaObj[e.target.name] = e.target.value;
     console.log(citaObj);
 });
 
