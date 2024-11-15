@@ -6,7 +6,14 @@ const emailInput = document.querySelector('#email');
 const fechaInput = document.querySelector('#fecha');
 const sintomasInput = document.querySelector('#sintomas');
 
-//! Objeto de Cita
+//! Eventos
+pacienteInput.addEventListener('change', datosCita);
+propietarioInput.addEventListener('change', datosCita);
+emailInput.addEventListener('change', datosCita);
+fechaInput.addEventListener('change', datosCita);
+sintomasInput.addEventListener('change', datosCita);
+
+//~ Objeto de Cita
 const citaObj = {
     paciente: '',
     propietario: '',
@@ -15,13 +22,9 @@ const citaObj = {
     sintomas: '',
 };
 
-//! Eventos
-pacienteInput.addEventListener('change', (e) => {
+//* Agrega los datos al arreglo del formulario
+function datosCita(e) {
     citaObj[e.target.name] = e.target.value;
     console.log(citaObj);
-});
-propietarioInput.addEventListener('change', (e) => {
-    citaObj[e.target.name] = e.target.value;
-    console.log(citaObj);
-});
+};
 
