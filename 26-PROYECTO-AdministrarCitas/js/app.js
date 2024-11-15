@@ -6,12 +6,16 @@ const emailInput = document.querySelector('#email');
 const fechaInput = document.querySelector('#fecha');
 const sintomasInput = document.querySelector('#sintomas');
 
+const formulario = document.querySelector('#formulario-cita');
+
 //! Eventos
 pacienteInput.addEventListener('change', datosCita);
 propietarioInput.addEventListener('change', datosCita);
 emailInput.addEventListener('change', datosCita);
 fechaInput.addEventListener('change', datosCita);
 sintomasInput.addEventListener('change', datosCita);
+
+formulario.addEventListener('submit', submitCita);
 
 //~ Objeto de Cita
 const citaObj = {
@@ -28,3 +32,8 @@ function datosCita(e) {
     console.log(citaObj);
 };
 
+function submitCita(e) {
+    e.preventDefault();
+
+    console.log('Submit al formulario...');
+};
