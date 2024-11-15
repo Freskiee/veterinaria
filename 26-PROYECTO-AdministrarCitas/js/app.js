@@ -29,11 +29,14 @@ const citaObj = {
 //* Agrega los datos al arreglo del formulario
 function datosCita(e) {
     citaObj[e.target.name] = e.target.value;
-    console.log(citaObj);
 };
 
 function submitCita(e) {
     e.preventDefault();
 
-    console.log('Submit al formulario...');
+    const { paciente, propietario, email, fecha, sintomas } = citaObj;
+    if (paciente.trim() === '' || propietario.trim() === '' || email.trim() === '' || fecha === '' || sintomas.trim() === '') {
+        console.log('todos los campos son obligatorios');
+        return;
+    };
 };
