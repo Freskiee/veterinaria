@@ -137,9 +137,13 @@ function submitCita(e) {
         return;
     };
 
-    citas.agregar(citaObj);
+    citas.agregar({...citaObj});
     formulario.reset();
     reiniciarObjetoCita();
+    new Notificacion({
+        texto: 'Paciente registrado 🥳',
+        tipo: 'exito',
+    });
 };
 
 //* Reinicia los valores del formulario
