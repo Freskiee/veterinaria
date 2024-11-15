@@ -26,24 +26,7 @@ const citaObj = {
     sintomas: '',
 };
 
-//* Agrega los datos al arreglo del formulario
-function datosCita(e) {
-    citaObj[e.target.name] = e.target.value;
-};
-
-//* Valida que no haya campos vacios
-function submitCita(e) {
-    e.preventDefault();
-    if (Object.values(citaObj).some(valor => valor.trim() === '')) {
-        new Notificacion({
-            texto: 'Todos los campos son obligatorios.',
-            tipo: 'error',
-        });
-        return;
-    };
-};
-
-
+//! Classes
 class Notificacion {
 
     constructor({ texto, tipo }) {
@@ -61,7 +44,7 @@ class Notificacion {
 
         //~ Eliminar las alertas duplicadas
         const alertaPrevia = document.querySelector('.alert');
-            alertaPrevia?.remove();
+        alertaPrevia?.remove();
 
         //~ Si es de tipo error, agrega una clase
         this.tipo === 'error' ? alerta.classList.add('bg-red-500') : alerta.classList.add('bg-green-500');
@@ -79,5 +62,42 @@ class Notificacion {
     };
 
 };
+
+class AdminCitas {
+
+    constructor() {
+        this.citas = [];
+    };
+
+    agregar(cita) {
+        this.citas = [...this.citas, cita];
+        console.log(this.citas);
+        
+    };
+
+};
+
+//* Agrega los datos al arreglo del formulario
+function datosCita(e) {
+    citaObj[e.target.name] = e.target.value;
+};
+
+const citas = new AdminCitas();
+
+//* Valida que no haya campos vacios
+function submitCita(e) {
+    e.preventDefault();
+    if (Object.values(citaObj).some(valor => valor.trim() === '')) {
+        new Notificacion({
+            texto: 'Todos los campos son obligatorios.',
+            tipo: 'error',
+        });
+        return;
+    };
+
+    citas.agregar(citaObj);
+};
+
+
 
 
