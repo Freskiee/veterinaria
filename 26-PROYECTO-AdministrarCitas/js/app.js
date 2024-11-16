@@ -22,6 +22,7 @@ formulario.addEventListener('submit', submitCita);
 
 //* Objeto de Cita
 const citaObj = {
+    id: generarId(),
     paciente: '',
     propietario: '',
     email: '',
@@ -147,7 +148,7 @@ const citas = new AdminCitas();
 
 //* Valida que no haya campos vacios
 function submitCita(e) {
-    e.preventDefault();
+    e.preventDefault();    
     if (Object.values(citaObj).some(valor => valor.trim() === '')) {
         new Notificacion({
             texto: 'Todos los campos son obligatorios.',
@@ -168,6 +169,7 @@ function submitCita(e) {
 //* Reinicia los valores del formulario
 function reiniciarObjetoCita() {
     //~ Reiniciar el Objeto
+    // citaObj.id = generarId();
     // citaObj.paciente = '';
     // citaObj.propietario = '';
     // citaObj.email = '';
@@ -175,6 +177,7 @@ function reiniciarObjetoCita() {
     // citaObj.sintomas = '';
 
     Object.assign(citaObj, {
+        id: generarId(),
         paciente: '',
         propietario: '',
         email: '',
@@ -183,9 +186,20 @@ function reiniciarObjetoCita() {
     });
 };
 
+//* Genera un ID unico para cada cita
+function generarId() {
+    return Math.random().toString(36).substring(2) + Date.now();
+};
+
 //* Tomar la cita y asignarla al objeto
 function cargarEdicion(cita) {
-    console.table(cita);
+    Object.assign(citaObj, cita);
+
+    pacienteInput.value = cita.paciente
+    propietarioInput.value = cita.propietario
+    emailInput.value = cita.email
+    fechaInput.value = cita.fecha
+    sintomasInput.value = cita.sintomas
 };
 
 
