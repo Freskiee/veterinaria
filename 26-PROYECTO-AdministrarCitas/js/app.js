@@ -7,9 +7,7 @@ const fechaInput = document.querySelector('#fecha');
 const sintomasInput = document.querySelector('#sintomas');
 
 const formulario = document.querySelector('#formulario-cita');
-
 const contenedorCitas = document.querySelector('#citas');
-
 
 //! Eventos
 pacienteInput.addEventListener('change', datosCita);
@@ -19,6 +17,8 @@ fechaInput.addEventListener('change', datosCita);
 sintomasInput.addEventListener('change', datosCita);
 
 formulario.addEventListener('submit', submitCita);
+
+let editando = false;
 
 //* Objeto de Cita
 const citaObj = {
@@ -148,7 +148,7 @@ const citas = new AdminCitas();
 
 //* Valida que no haya campos vacios
 function submitCita(e) {
-    e.preventDefault();    
+    e.preventDefault();
     if (Object.values(citaObj).some(valor => valor.trim() === '')) {
         new Notificacion({
             texto: 'Todos los campos son obligatorios.',
@@ -157,13 +157,17 @@ function submitCita(e) {
         return;
     };
 
-    citas.agregar({ ...citaObj });
+    if (editando) {
+        console.log('editando registro...');
+    } else {
+        citas.agregar({ ...citaObj });
+        new Notificacion({
+            texto: 'Paciente registrado 🥳',
+            tipo: 'exito',
+        });
+    };
     formulario.reset();
     reiniciarObjetoCita();
-    new Notificacion({
-        texto: 'Paciente registrado 🥳',
-        tipo: 'exito',
-    });
 };
 
 //* Reinicia los valores del formulario
@@ -200,6 +204,8 @@ function cargarEdicion(cita) {
     emailInput.value = cita.email
     fechaInput.value = cita.fecha
     sintomasInput.value = cita.sintomas
+
+    editando = true
 };
 
 
