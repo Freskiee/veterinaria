@@ -5,8 +5,8 @@ const propietarioInput = document.querySelector('#propietario');
 const emailInput = document.querySelector('#email');
 const fechaInput = document.querySelector('#fecha');
 const sintomasInput = document.querySelector('#sintomas');
-
 const formulario = document.querySelector('#formulario-cita');
+const formularioInput = document.querySelector('#formulario-cita input[type="submit"]');
 const contenedorCitas = document.querySelector('#citas');
 
 //! Eventos
@@ -15,7 +15,6 @@ propietarioInput.addEventListener('change', datosCita);
 emailInput.addEventListener('change', datosCita);
 fechaInput.addEventListener('change', datosCita);
 sintomasInput.addEventListener('change', datosCita);
-
 formulario.addEventListener('submit', submitCita);
 
 let editando = false;
@@ -32,60 +31,52 @@ const citaObj = {
 
 //! Classes
 class Notificacion {
-
     constructor({ texto, tipo }) {
         this.texto = texto;
         this.tipo = tipo;
-
         this.mostrar();
     };
-
     // Esto es un metodo
     mostrar() {
         //~ Crear la notificacion
         const alerta = document.createElement('DIV');
         alerta.classList.add('text-center', 'w-full', 'p-3', 'text-white', 'my-5', 'alert', 'uppercase', 'font-bold', 'text-sm');
-
         //~ Eliminar las alertas duplicadas
         const alertaPrevia = document.querySelector('.alert');
         alertaPrevia?.remove();
-
         //~ Si es de tipo error, agrega una clase
         this.tipo === 'error' ? alerta.classList.add('bg-red-500') : alerta.classList.add('bg-green-500');
-
         //~ Mensaje de error
         alerta.textContent = this.texto;
-
         //~ Insertar en el DOM
         formulario.parentElement.insertBefore(alerta, formulario); // El primer elemento es lo que quieres insertar, el segundo donde lo quieres insertar
-
         //~ Quitar despues de 3 seg.
         setTimeout(() => {
             alerta.remove();
         }, 3000);
     };
-
 };
 
 class AdminCitas {
-
     constructor() {
         this.citas = [];
     };
-
     // Esto es un metodo
     agregar(cita) {
         this.citas = [...this.citas, cita];
         this.mostrar();
     };
-
+    // Esto es un metodo
+    editar(citaActualizada){
+        this.citas = this.citas.map(cita => cita.id === citaActualizada.id ? citaActualizada : cita);
+        this.mostrar();
+    };
     // Esto es un metodo
     mostrar() {
         //~ Limpiar el HTML
         while (contenedorCitas.firstChild) {
             contenedorCitas.removeChild(contenedorCitas.firstChild);
         };
-
         //~ Generando las citas
         this.citas.forEach(cita => {
             const divCita = document.createElement('div');
@@ -115,6 +106,7 @@ class AdminCitas {
             const btnEditar = document.createElement('button');
             btnEditar.classList.add('py-2', 'px-10', 'bg-indigo-600', 'hover:bg-indigo-700', 'text-white', 'font-bold', 'uppercase', 'rounded-lg', 'flex', 'items-center', 'gap-2', 'btn-editar');
             btnEditar.innerHTML = 'Editar <svg fill="none" class="h-5 w-5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path></svg>';
+
             const clone = structuredClone(cita);
             btnEditar.onclick = () => cargarEdicion(clone);
 
@@ -149,6 +141,7 @@ const citas = new AdminCitas();
 //* Valida que no haya campos vacios
 function submitCita(e) {
     e.preventDefault();
+
     if (Object.values(citaObj).some(valor => valor.trim() === '')) {
         new Notificacion({
             texto: 'Todos los campos son obligatorios.',
@@ -158,7 +151,11 @@ function submitCita(e) {
     };
 
     if (editando) {
-        console.log('editando registro...');
+        citas.editar({...citaObj});
+        new Notificacion({
+            texto: 'Guardado Correctamente',
+            tipo: 'exito',
+        });
     } else {
         citas.agregar({ ...citaObj });
         new Notificacion({
@@ -166,8 +163,11 @@ function submitCita(e) {
             tipo: 'exito',
         });
     };
+
     formulario.reset();
     reiniciarObjetoCita();
+    formularioInput.value = 'Registar Paciente';
+    editando = false;
 };
 
 //* Reinicia los valores del formulario
@@ -199,13 +199,13 @@ function generarId() {
 function cargarEdicion(cita) {
     Object.assign(citaObj, cita);
 
-    pacienteInput.value = cita.paciente
-    propietarioInput.value = cita.propietario
-    emailInput.value = cita.email
-    fechaInput.value = cita.fecha
-    sintomasInput.value = cita.sintomas
-
-    editando = true
+    pacienteInput.value = cita.paciente;
+    propietarioInput.value = cita.propietario;
+    emailInput.value = cita.email;
+    fechaInput.value = cita.fecha;
+    sintomasInput.value = cita.sintomas;
+    editando = true;
+    formularioInput.value = 'Guardar Cambios';
 };
 
 
