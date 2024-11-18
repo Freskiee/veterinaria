@@ -67,8 +67,13 @@ class AdminCitas {
         this.mostrar();
     };
     // Esto es un metodo
-    editar(citaActualizada){
+    editar(citaActualizada) {
         this.citas = this.citas.map(cita => cita.id === citaActualizada.id ? citaActualizada : cita);
+        this.mostrar();
+    };
+    // Esto es un metodo
+    eliminar(id) {
+        this.citas = this.citas.filter(cita => cita.id !== id);
         this.mostrar();
     };
     // Esto es un metodo
@@ -76,6 +81,11 @@ class AdminCitas {
         //~ Limpiar el HTML
         while (contenedorCitas.firstChild) {
             contenedorCitas.removeChild(contenedorCitas.firstChild);
+        };
+        //~ Si no hay citas
+        if(this.citas.length === 0){
+            contenedorCitas.innerHTML = `<p class="text-xl mt-5 mb-10 text-center">No Hay Pacientes</p>`;
+            return;
         };
         //~ Generando las citas
         this.citas.forEach(cita => {
@@ -113,6 +123,7 @@ class AdminCitas {
             const btnEliminar = document.createElement('button');
             btnEliminar.classList.add('py-2', 'px-10', 'bg-red-600', 'hover:bg-red-700', 'text-white', 'font-bold', 'uppercase', 'rounded-lg', 'flex', 'items-center', 'gap-2');
             btnEliminar.innerHTML = 'Eliminar <svg fill="none" class="h-5 w-5" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" stroke="currentColor"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>';
+            btnEliminar.onclick = () => this.eliminar(cita.id);
 
             const contenedorBotones = document.createElement('DIV');
             contenedorBotones.classList.add('flex', 'justify-between', 'mt-10');
@@ -151,7 +162,7 @@ function submitCita(e) {
     };
 
     if (editando) {
-        citas.editar({...citaObj});
+        citas.editar({ ...citaObj });
         new Notificacion({
             texto: 'Guardado Correctamente',
             tipo: 'exito',
